@@ -18,7 +18,7 @@ public class AddressBookMain {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 0 to EXIT.");
+            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 3 to DELETE existing contact.\nEnter 0 to EXIT.");
 
             int userChoice = userInput.nextInt();
             userInput.nextLine();
@@ -30,6 +30,9 @@ public class AddressBookMain {
                 case 2 :
                     editContact(addressBook, userInput);
                     break;
+                case 3 :
+                    deleteContact(addressBook,userInput);
+                    break;
                 case 0 :
                     exit = true;
                     System.out.println("BYE!");
@@ -37,6 +40,20 @@ public class AddressBookMain {
                 default :
                     System.out.println("Inalid input!");
             }
+        }
+    }
+
+    private static void deleteContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
+        System.out.println("Enter Contact Name : ");
+        String contactName = userInput.nextLine();
+
+        ContactPerson existingContact = addressBook.get(contactName);
+
+        if (existingContact == null) {
+            System.out.println("Contact doesn't exist.");
+        }else {
+            addressBook.remove(contactName);
+            System.out.println("Contact Deleted!");
         }
     }
 
@@ -51,6 +68,7 @@ public class AddressBookMain {
         }else {
             ContactPerson contactPerson = editContactDetail(existingContact, contactName, userInput);
             addressBook.put(contactName, contactPerson);
+            System.out.println("Contact Edited!");
         }
     }
 
@@ -103,6 +121,7 @@ public class AddressBookMain {
     private static void addContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
         ContactPerson contactPerson = createContact(userInput);
         addressBook.put(contactPerson.getName(),contactPerson);
+        System.out.println("Contact Added!");
     }
 
     private static ContactPerson createContact(Scanner userInput) {
