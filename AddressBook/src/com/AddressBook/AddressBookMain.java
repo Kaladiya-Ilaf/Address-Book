@@ -12,6 +12,7 @@ public class AddressBookMain {
         System.out.println("Welcome To Address Book Program.");
 
         operatingAddressBook(addressBook, userInput);
+
     }
 
     private static void operatingAddressBook(Map<String, ContactPerson> addressBook, Scanner userInput) {
@@ -26,12 +27,15 @@ public class AddressBookMain {
             switch (userChoice){
                 case 1 :
                     addContact(addressBook, userInput);
+                    System.out.println(addressBook);
                     break;
                 case 2 :
                     editContact(addressBook, userInput);
+                    System.out.println(addressBook);
                     break;
                 case 3 :
                     deleteContact(addressBook,userInput);
+                    System.out.println(addressBook);
                     break;
                 case 0 :
                     exit = true;
@@ -43,30 +47,37 @@ public class AddressBookMain {
         }
     }
 
+    private static boolean checkContactExistance(Map<String, ContactPerson> addressBook, String name) {
+        boolean isPresent = addressBook.keySet().stream().noneMatch(string -> string.equals(name));
+        return  isPresent;
+    }
+
     private static void deleteContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
-        System.out.println("Enter Contact Name : ");
+        System.out.println("\nEnter Contact Name : ");
         String contactName = userInput.nextLine();
+        boolean contactPresent = checkContactExistance(addressBook, contactName);
 
-        ContactPerson existingContact = addressBook.get(contactName);
-
-        if (existingContact == null) {
-            System.out.println("Contact doesn't exist.");
-        }else {
+        if(contactPresent == true) {
+            System.out.println("Contact doesn't exist.\n");
+        }
+        else{
             addressBook.remove(contactName);
             System.out.println("Contact Deleted!\n");
         }
+
     }
 
     private static void editContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
         System.out.println("Enter Contact Name : ");
         String contactName = userInput.nextLine();
+        ContactPerson contactToEdit = addressBook.get(contactName);
+        boolean contactPresent = checkContactExistance(addressBook, contactName);
 
-        ContactPerson existingContact = addressBook.get(contactName);
-
-        if (existingContact == null) {
-            System.out.println("Contact doesn't exist.");
-        }else {
-            ContactPerson contactPerson = editContactDetail(existingContact, contactName, userInput);
+        if(contactPresent == true) {
+            System.out.println("Contact doesn't exist.\n");
+        }
+        else{
+            ContactPerson contactPerson = editContactDetail(contactToEdit, contactName, userInput);
             addressBook.put(contactName, contactPerson);
             System.out.println("Contact Edited!\n");
         }
@@ -124,13 +135,22 @@ public class AddressBookMain {
 
         for (int i = 1; i <= noOfContacts; i++) {
             userInput.nextLine();
-            System.out.println("\n Enter detail for contact : " + i);
+            System.out.println("\nEnter detail for contact : " + i);
             ContactPerson contactPerson = createContact(userInput);
-            addressBook.put(contactPerson.getName(), contactPerson);
+            boolean contactPresent = checkContactExistance(addressBook, contactPerson.getName());
+
+            if(contactPresent == true) {
+                addressBook.put(contactPerson.getName(), contactPerson);
+                System.out.println("Contacts Added!\n");
+            }
+            else{
+                System.out.println("Contact already exists! Contact cannot be added to address book\n");
+            }
         }
 
-        System.out.println(noOfContacts + " Contacts Added!\n");
     }
+
+
 
     private static ContactPerson createContact(Scanner userInput) {
         System.out.println("Enter First Name : ");
