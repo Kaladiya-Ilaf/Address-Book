@@ -53,7 +53,7 @@ public class AddressBookMain {
             System.out.println("Contact doesn't exist.");
         }else {
             addressBook.remove(contactName);
-            System.out.println("Contact Deleted!");
+            System.out.println("Contact Deleted!\n");
         }
     }
 
@@ -68,7 +68,7 @@ public class AddressBookMain {
         }else {
             ContactPerson contactPerson = editContactDetail(existingContact, contactName, userInput);
             addressBook.put(contactName, contactPerson);
-            System.out.println("Contact Edited!");
+            System.out.println("Contact Edited!\n");
         }
     }
 
@@ -119,9 +119,17 @@ public class AddressBookMain {
     }
 
     private static void addContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
-        ContactPerson contactPerson = createContact(userInput);
-        addressBook.put(contactPerson.getName(),contactPerson);
-        System.out.println("Contact Added!");
+        System.out.println("Enter number of contacts you want to add :");
+        int noOfContacts = userInput.nextInt();
+
+        for (int i = 1; i <= noOfContacts; i++) {
+            userInput.nextLine();
+            System.out.println("\n Enter detail for contact : " + i);
+            ContactPerson contactPerson = createContact(userInput);
+            addressBook.put(contactPerson.getName(), contactPerson);
+        }
+
+        System.out.println(noOfContacts + " Contacts Added!\n");
     }
 
     private static ContactPerson createContact(Scanner userInput) {
