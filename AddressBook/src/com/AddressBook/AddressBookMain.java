@@ -7,26 +7,28 @@ import java.util.Scanner;
 public class AddressBookMain {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
-
         Map<String, ContactPerson> addressBook = new HashMap<>();
 
         System.out.println("Welcome To Address Book Program.");
 
         operatingAddressBook(addressBook, userInput);
-
     }
 
     private static void operatingAddressBook(Map<String, ContactPerson> addressBook, Scanner userInput) {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Enter 1 to ADD new contact.\nEnter 0 to EXIT.");
+            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 0 to EXIT.");
+
             int userChoice = userInput.nextInt();
             userInput.nextLine();
 
             switch (userChoice){
                 case 1 :
                     addContact(addressBook, userInput);
+                    break;
+                case 2 :
+                    editContact(addressBook, userInput);
                     break;
                 case 0 :
                     exit = true;
@@ -38,10 +40,69 @@ public class AddressBookMain {
         }
     }
 
+    private static void editContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
+        System.out.println("Enter Contact Name : ");
+        String contactName = userInput.nextLine();
+
+        ContactPerson existingContact = addressBook.get(contactName);
+
+        if (existingContact == null) {
+            System.out.println("Contact doesn't exist.");
+        }else {
+            ContactPerson contactPerson = editContactDetail(existingContact, contactName, userInput);
+            addressBook.put(contactName, contactPerson);
+        }
+    }
+
+    private static ContactPerson editContactDetail(ContactPerson contactPerson, String contactName, Scanner userInput) {
+        boolean exitEdit = false;
+
+        while(!exitEdit){
+            System.out.println("Enter 1 to edit ADDRESS\nEnter 2 to edit CITY\nEnter 3 to edit STATE\nEnter 4 to edit ZIP\nEnter 5 to edit PHONE NUMBER\nEnter 0 to EXIT.");
+
+            int editChoice = userInput.nextInt();
+            userInput.nextLine();
+
+            switch (editChoice){
+                case 1:
+                    System.out.println("Enter the new address");
+                    String newAddress = userInput.nextLine();
+                    contactPerson.setAddress(newAddress);
+                    break;
+                case 2:
+                    System.out.println("Enter the new city");
+                    String newCity = userInput.nextLine();
+                    contactPerson.setCity(newCity);
+                    break;
+                case 3:
+                    System.out.println("Enter the new state");
+                    String newState = userInput.nextLine();
+                    contactPerson.setState(newState);
+                    break;
+                case 4:
+                    System.out.println("Enter the new zip");
+                    int newZip = userInput.nextInt();
+                    contactPerson.setZip(newZip);
+                    break;
+                case 5:
+                    System.out.println("Enter the new phone number");
+                    long newPhoneNumber = userInput.nextLong();
+                    contactPerson.setPhoneNumber(newPhoneNumber);
+                    break;
+                case 0:
+                    exitEdit = true;
+                    break;
+                default:
+                    System.out.println("Invalid Input.");
+            }
+        }
+
+        return contactPerson;
+    }
+
     private static void addContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
         ContactPerson contactPerson = createContact(userInput);
         addressBook.put(contactPerson.getName(),contactPerson);
-        System.out.println(addressBook);
     }
 
     private static ContactPerson createContact(Scanner userInput) {
@@ -64,10 +125,10 @@ public class AddressBookMain {
         int zip = userInput.nextInt();
 
         System.out.println("Enter Phone Number : ");
-        int phoneNumber = userInput.nextInt();
+        long phoneNumber = userInput.nextLong();
 
         String name = firstName + " " +lastName;
-        return new ContactPerson(name, firstName, lastName, address,city,state,zip,phoneNumber);
+        return new ContactPerson(name, firstName, lastName, address, city, state, zip, phoneNumber);
     }
 
 
@@ -89,7 +150,7 @@ class ContactPerson{
     }
 
     //Parameterized Constructor
-    public ContactPerson(String name, String firstName, String lastName, String address, String city, String state, int zip, int phoneNumber){
+    public ContactPerson(String name, String firstName, String lastName, String address, String city, String state, int zip, long phoneNumber){
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -113,7 +174,7 @@ class ContactPerson{
         this.firstName = firstName;
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return firstName;
     }
 
@@ -157,7 +218,7 @@ class ContactPerson{
         return zip;
     }
 
-    public void setPhoneNumber(){
+    public void setPhoneNumber(long newPhoneNumber){
         this.phoneNumber = phoneNumber;
     }
 
