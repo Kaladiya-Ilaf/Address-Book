@@ -19,7 +19,7 @@ public class AddressBookMain {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 3 to DELETE existing contact.\nEnter 4 to sort contact.\nEnter 5 to view contact.\nEnter 0 to EXIT.");
+            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 3 to DELETE existing contact.\nEnter 4 to sort contact.\nEnter 5 to view contact.\nnEnter 5 to search contact.\nEnter 0 to EXIT.");
 
             int userChoice = userInput.nextInt();
             userInput.nextLine();
@@ -38,7 +38,10 @@ public class AddressBookMain {
                     sortContacts(addressBook, userInput);
                     break;
                 case 5:
-                    viewContacts(addressBook,userInput);
+                    viewContacts(addressBook, userInput);
+                    break;
+                case 6:
+                    searchContact(addressBook, userInput);
                     break;
                 case 0 :
                     exit = true;
@@ -48,6 +51,50 @@ public class AddressBookMain {
                     System.out.println("Invalid input!");
             }
         }
+    }
+
+    private static void searchContact(Map<String, ContactPerson> addressBook, Scanner userInput) {
+        boolean exitSearch = false;
+        while (!exitSearch){
+            System.out.println("Enter 1 to search contacts by Person's City\nEnter 2 to search contacts by Person's State\nEnter 0 to exit viewing");
+            int searchChoice = userInput.nextInt();
+            userInput.nextLine();
+
+            switch (searchChoice){
+                case 1:
+                    Map<ContactPerson, String> cityDict = viewContactsByCity(addressBook);
+                    System.out.println("Enter City :");
+                    String city = userInput.nextLine();
+                    searchByCity(cityDict,city);
+                    break;
+                case 2:
+                    Map<ContactPerson, String> stateDict = viewContactsByState(addressBook);
+                    System.out.println("Enter State :");
+                    String state = userInput.nextLine();
+                    searchByState(stateDict,state);
+                    break;
+                case 0:
+                    exitSearch = true;
+                    break;
+                default:
+                    System.out.println("Invalid Input");
+
+            }
+        }
+    }
+
+    private static void searchByState(Map<ContactPerson, String> stateDict, String state) {
+        stateDict.keySet()
+                .stream()
+                .filter(contact -> contact.getState().equals(state))
+                .forEach(System.out::println);
+    }
+
+    private static void searchByCity(Map<ContactPerson, String> cityDict, String city) {
+        cityDict.keySet()
+                .stream()
+                .filter(contact -> contact.getCity().equals(city))
+                .forEach(System.out::println);
     }
 
     private static void viewContacts(Map<String, ContactPerson> addressBook, Scanner userInput) {
