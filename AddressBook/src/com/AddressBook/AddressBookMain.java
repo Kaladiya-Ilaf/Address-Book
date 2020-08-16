@@ -1,9 +1,6 @@
 package com.AddressBook;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddressBookMain {
@@ -37,7 +34,7 @@ public class AddressBookMain {
                     deleteContact(addressBook,userInput);
                     break;
                 case 4:
-                    sortByPersonName(addressBook);
+                    sortContacts(addressBook, userInput);
                     break;
                 case 0 :
                     exit = true;
@@ -47,6 +44,50 @@ public class AddressBookMain {
                     System.out.println("Invalid input!");
             }
         }
+    }
+
+    private static void sortContacts(Map<String, ContactPerson> addressBook, Scanner userInput) {
+        boolean exitSort = false;
+
+        while(!exitSort){
+            System.out.println("Enter 1 to sort contacts by Person's Name\nEnter 2 to sort contacts by Person's City\nEnter 3 to sort contacts by Person's State\nEnter 4 to sort contacts by Person's Zip\nEnter 0 to exit sorting");
+
+            int sortChoice = userInput.nextInt();
+            userInput.nextLine();
+
+            switch (sortChoice){
+                case 1:
+                    sortByPersonName(addressBook);
+                    break;
+                case 2:
+                    sortContacts((Map<String, ContactPerson>) addressBook, Comparator.comparing(ContactPerson::getCity));
+                    break;
+                case 3:
+                    sortContacts((Map<String, ContactPerson>) addressBook, Comparator.comparing(ContactPerson::getState));
+                    break;
+                case 4:
+                    sortContacts(addressBook, Comparator.comparing(ContactPerson::getZip));
+                    break;
+                case 0:
+                    exitSort = true;
+                    break;
+                default:
+                    System.out.println("Invalid Choice");
+            }
+        }
+
+    }
+
+    private static void sortContacts(Map<String, ContactPerson> addressBook, Comparator<ContactPerson> comparing) {
+        Map<String, ContactPerson> sortedContacts = addressBook.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(comparing))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(detail, value)->detail, LinkedHashMap::new));
+
+        sortedContacts.forEach((name,contactPerson)->{
+            System.out.println(name);
+            System.out.println(contactPerson);
+        });
     }
 
     private static void sortByPersonName(Map<String, ContactPerson> addressBook) {
