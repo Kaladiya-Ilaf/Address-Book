@@ -1,6 +1,7 @@
 package com.AddressBook;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AddressBookMain {
@@ -59,14 +60,17 @@ public class AddressBookMain {
 
             switch (viewChoice){
                 case 1 :
-                    System.out.println("Enter City :");
-                    String city = userInput.nextLine();
-                    viewContactsByCity(addressBook, city);
+                    Map<ContactPerson, String> cityDict = viewContactsByCity(addressBook);
+                    cityDict.forEach((K,V)-> {
+                        System.out.println(V + ":" + K);
+                    });
                     break;
                 case 2:
-                    System.out.println("Enter State :");
-                    String state = userInput.nextLine();
-                    viewContactsByState(addressBook, state);
+                    Map<ContactPerson, String> stateDict = viewContactsByState(addressBook);
+                    stateDict.forEach((K,V)->{
+                        System.out.println(V +":"+K);
+                    });
+
                     break;
                 case 0:
                     exitView = true;
@@ -77,22 +81,24 @@ public class AddressBookMain {
         }
     }
 
-    private static void viewContactsByState(Map<String, ContactPerson> addressBook, String state) {
-        for (String name : addressBook.keySet()){
-            ContactPerson contactPerson = addressBook.get(name);
-            if(contactPerson.getState().equals(state)){
-                System.out.println(contactPerson);
-            }
-        }
+    private static Map<ContactPerson, String> viewContactsByState(Map<String, ContactPerson> addressBook) {
+        Map<ContactPerson, String> stateDictionary = addressBook.values()
+                .stream()
+                .collect(Collectors.toMap(Function.identity(),ContactPerson::getState,
+                        (e1, e2) -> e1,
+                        HashMap::new));
+        return stateDictionary;
+
     }
 
-    private static void viewContactsByCity(Map<String, ContactPerson> addressBook, String city) {
-        for (String name : addressBook.keySet()){
-            ContactPerson contactPerson = addressBook.get(name);
-            if(contactPerson.getCity().equals(city)){
-                System.out.println(contactPerson);
-            }
-        }
+    private static Map<ContactPerson, String> viewContactsByCity(Map<String, ContactPerson> addressBook) {
+            Map<ContactPerson, String> cityDictionary = addressBook.values()
+                    .stream()
+                    .collect(Collectors.toMap(Function.identity(),ContactPerson::getCity,
+                            (e1, e2) -> e1,
+                            HashMap::new));
+            return cityDictionary;
+
     }
 
     private static void sortContacts(Map<String, ContactPerson> addressBook, Scanner userInput) {
