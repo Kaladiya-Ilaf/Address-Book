@@ -18,7 +18,7 @@ public class AddressBookMain {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 3 to DELETE existing contact.\nEnter 4 to sort contact by name.\nEnter 0 to EXIT.");
+            System.out.println("Enter 1 to ADD new contact.\nEnter 2 to EDIT existing contact.\nEnter 3 to DELETE existing contact.\nEnter 4 to sort contact.\nEnter 5 to view contact.\nEnter 0 to EXIT.");
 
             int userChoice = userInput.nextInt();
             userInput.nextLine();
@@ -36,12 +36,61 @@ public class AddressBookMain {
                 case 4:
                     sortContacts(addressBook, userInput);
                     break;
+                case 5:
+                    viewContacts(addressBook,userInput);
+                    break;
                 case 0 :
                     exit = true;
                     System.out.println("BYE!");
                     break;
                 default :
                     System.out.println("Invalid input!");
+            }
+        }
+    }
+
+    private static void viewContacts(Map<String, ContactPerson> addressBook, Scanner userInput) {
+        boolean exitView = false;
+
+        while(!exitView){
+            System.out.println("Enter 1 to view contacts by Person's City\nEnter 2 to view contacts by Person's State\nEnter 0 to exit viewing");
+            int viewChoice = userInput.nextInt();
+            userInput.nextLine();
+
+            switch (viewChoice){
+                case 1 :
+                    System.out.println("Enter City :");
+                    String city = userInput.nextLine();
+                    viewContactsByCity(addressBook, city);
+                    break;
+                case 2:
+                    System.out.println("Enter State :");
+                    String state = userInput.nextLine();
+                    viewContactsByState(addressBook, state);
+                    break;
+                case 0:
+                    exitView = true;
+                    break;
+                default:
+                    System.out.println("Invalid Choice.");
+            }
+        }
+    }
+
+    private static void viewContactsByState(Map<String, ContactPerson> addressBook, String state) {
+        for (String name : addressBook.keySet()){
+            ContactPerson contactPerson = addressBook.get(name);
+            if(contactPerson.getState().equals(state)){
+                System.out.println(contactPerson);
+            }
+        }
+    }
+
+    private static void viewContactsByCity(Map<String, ContactPerson> addressBook, String city) {
+        for (String name : addressBook.keySet()){
+            ContactPerson contactPerson = addressBook.get(name);
+            if(contactPerson.getCity().equals(city)){
+                System.out.println(contactPerson);
             }
         }
     }
@@ -60,10 +109,10 @@ public class AddressBookMain {
                     sortByPersonName(addressBook);
                     break;
                 case 2:
-                    sortContacts((Map<String, ContactPerson>) addressBook, Comparator.comparing(ContactPerson::getCity));
+                    sortContacts(addressBook, Comparator.comparing(ContactPerson::getCity));
                     break;
                 case 3:
-                    sortContacts((Map<String, ContactPerson>) addressBook, Comparator.comparing(ContactPerson::getState));
+                    sortContacts(addressBook, Comparator.comparing(ContactPerson::getState));
                     break;
                 case 4:
                     sortContacts(addressBook, Comparator.comparing(ContactPerson::getZip));
@@ -94,7 +143,7 @@ public class AddressBookMain {
         Map<String, ContactPerson> sortedContacts = addressBook.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByKey())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(detail,value)->detail, LinkedHashMap::new));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,(detail,value)-> detail, LinkedHashMap::new));
 
         sortedContacts.forEach((name,contactPerson)->{
             System.out.println(name);
