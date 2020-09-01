@@ -8,11 +8,9 @@ public class AddressBookMain {
     public static void main(String[] args) {
         Scanner userInput = new Scanner(System.in);
         Map<String, ContactPerson> addressBook = new HashMap<>();
-
-        System.out.println("Welcome To Address Book Program.");
-
         operatingAddressBook(addressBook, userInput);
 
+        System.out.println("Welcome To Address Book Program.");
     }
 
     private static void operatingAddressBook(Map<String, ContactPerson> addressBook, Scanner userInput) {
@@ -117,7 +115,6 @@ public class AddressBookMain {
                     stateDict.forEach((K,V)->{
                         System.out.println(V +":"+K);
                     });
-
                     break;
                 case 0:
                     exitView = true;
@@ -289,7 +286,7 @@ public class AddressBookMain {
         System.out.println("Enter number of contacts you want to add :");
         int noOfContacts = userInput.nextInt();
 
-        for (int i = 1; i <= noOfContacts; i++) {
+        for (int i = 0; i < noOfContacts; i++ ){
             userInput.nextLine();
             System.out.println("\nEnter detail for contact : " + i);
             ContactPerson contactPerson = createContact(userInput);
@@ -303,7 +300,6 @@ public class AddressBookMain {
                 System.out.println("Contact already exists! Contact cannot be added to address book\n");
             }
         }
-
     }
 
 
@@ -333,8 +329,6 @@ public class AddressBookMain {
         String name = firstName + " " +lastName;
         return new ContactPerson(name, firstName, lastName, address, city, state, zip, phoneNumber);
     }
-
-
 }
 
 
